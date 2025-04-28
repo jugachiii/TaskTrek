@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+// App.js
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { DarkModeProvider } from './contexts/DarkModeContext';
+import HomeScreen from './screens/HomeScreen';
+import TaskListScreen from './screens/TaskListScreen';
+import AddTaskScreen from './screens/AddTaskScreen';
+import EditTaskScreen from './screens/EditTaskScreen';
+
+const Stack = createStackNavigator();
 
 export default function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <DarkModeProvider>
+      <NavigationContainer>
+        <Stack.Navigator initialRouteName="Home" screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Home" component={HomeScreen} />
+          <Stack.Screen name="TaskList" component={TaskListScreen} />
+          <Stack.Screen name="AddTask" component={AddTaskScreen} />
+          <Stack.Screen name="EditTask" component={EditTaskScreen} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </DarkModeProvider>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
