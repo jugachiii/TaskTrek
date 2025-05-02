@@ -2,6 +2,7 @@
 import React from 'react';
 import { TouchableOpacity, Text, StyleSheet, Animated } from 'react-native';
 
+
 export default function AnimatedButton({ title, onPress }) {
   const scaleValue = new Animated.Value(1);
 

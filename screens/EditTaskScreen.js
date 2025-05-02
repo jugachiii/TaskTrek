@@ -2,11 +2,14 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import AnimatedButton from '../components/AnimatedButton';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+
+const auth = getAuth();
+
+
 
 export default function EditTaskScreen({ route, navigation }) {
-  const { darkMode } = useContext(DarkModeContext);
   const { taskId } = route.params;
   const [taskTitle, setTaskTitle] = useState('');
   const [taskCategory, setTaskCategory] = useState('');
@@ -17,12 +20,8 @@ export default function EditTaskScreen({ route, navigation }) {
 
   return (
     <LinearGradient
-      colors={darkMode ? ['#0b0c10', '#1f2833'] : ['#d5f4ff', '#a6e4f9']}
-      style={styles.container}
+      
     >
-      <Text style={[styles.title, { color: darkMode ? '#ffffff' : '#000000' }]}>
-        Edit Task
-      </Text>
 
       {/* Here you will add your Form later for editing tasks */}
 

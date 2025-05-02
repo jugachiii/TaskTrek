@@ -1,15 +1,14 @@
-// screens/AddTaskScreen.js
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Picker, Button, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { DarkModeContext } from '../contexts/DarkModeContext';
 import * as Notifications from 'expo-notifications';
 import AnimatedButton from '../components/AnimatedButton';
+import { db } from '../firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+
 
 export default function AddTaskScreen({ navigation }) {
-  const { darkMode } = useContext(DarkModeContext);
-  
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [category, setCategory] = useState('Work');
@@ -26,10 +25,8 @@ export default function AddTaskScreen({ navigation }) {
       return;
     }
 
-    // Simulate saving task (you can later connect to database or AsyncStorage)
     console.log({ title, description, category, deadline });
 
-    // Schedule notification
     await scheduleNotification();
 
     Alert.alert('Task Added!', `Task "${title}" scheduled successfully.`);
@@ -38,7 +35,7 @@ export default function AddTaskScreen({ navigation }) {
 
   const scheduleNotification = async () => {
     const triggerTime = new Date(deadline);
-    triggerTime.setMinutes(triggerTime.getMinutes() - 30); // 30 minutes before deadline
+    triggerTime.setMinutes(triggerTime.getMinutes() - 30);
 
     await Notifications.scheduleNotificationAsync({
       content: {
@@ -59,33 +56,31 @@ export default function AddTaskScreen({ navigation }) {
 
   return (
     <LinearGradient
-      colors={darkMode ? ['#0b0c10', '#1f2833'] : ['#d5f4ff', '#a6e4f9']}
+      colors={['#d5f4ff', '#a6e4f9']}
       style={styles.container}
     >
-      <Text style={[styles.title, { color: darkMode ? '#ffffff' : '#000000' }]}>
-        Create New Task
-      </Text>
+      <Text style={styles.title}>Create New Task</Text>
 
       <TextInput
-        style={[styles.input, { backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000' }]}
+        style={styles.input}
         placeholder="Task Title"
-        placeholderTextColor={darkMode ? '#aaa' : '#666'}
+        placeholderTextColor="#666"
         value={title}
         onChangeText={setTitle}
       />
 
       <TextInput
-        style={[styles.input, { backgroundColor: darkMode ? '#333' : '#fff', color: darkMode ? '#fff' : '#000' }]}
+        style={styles.input}
         placeholder="Task Description"
-        placeholderTextColor={darkMode ? '#aaa' : '#666'}
+        placeholderTextColor="#666"
         value={description}
         onChangeText={setDescription}
       />
 
-      <View style={[styles.pickerContainer, { backgroundColor: darkMode ? '#333' : '#fff' }]}>
+      <View style={styles.pickerContainer}>
         <Picker
           selectedValue={category}
-          style={{ color: darkMode ? '#fff' : '#000' }}
+          style={{ color: '#000' }}
           onValueChange={(itemValue) => setCategory(itemValue)}
         >
           <Picker.Item label="Work" value="Work" />
@@ -96,7 +91,7 @@ export default function AddTaskScreen({ navigation }) {
 
       <Button
         title="Pick Deadline"
-        color={darkMode ? "#00bfff" : "#0077cc"}
+        color="#0077cc"
         onPress={() => setShowDatePicker(true)}
       />
 
@@ -126,6 +121,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
     textAlign: 'center',
+    color: '#000',
   },
   input: {
     height: 50,
@@ -133,9 +129,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     paddingHorizontal: 15,
     fontSize: 16,
+    backgroundColor: '#fff',
+    color: '#000',
   },
   pickerContainer: {
     marginBottom: 15,
     borderRadius: 10,
+    backgroundColor: '#fff',
   },
 });

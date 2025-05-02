@@ -2,18 +2,19 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity, Alert, TextInput, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { DarkModeContext } from '../contexts/DarkModeContext';;
 import AnimatedButton from '../components/AnimatedButton';
+import { db } from '../firebase';
+import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
+import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword } from 'firebase/auth';
+
+const auth = getAuth();
+
 
 export default function TaskListScreen({ navigation }) {
-  const { darkMode } = useContext(DarkModeContext);
   const [tasks, setTasks] = useState([]);
   const [editingTask, setEditingTask] = useState(null);
   const [editedTitle, setEditedTitle] = useState('');
   const [modalVisible, setModalVisible] = useState(false);
-
-  
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('focus', () => {
